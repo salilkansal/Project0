@@ -1,7 +1,6 @@
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
-import java.util.Random;
 
 
 class MergeSort<T extends Comparable<? super T>> {
@@ -61,51 +60,44 @@ class MergeSort<T extends Comparable<? super T>> {
 
 }
 
-class HeapSort<T extends Comparable<? super T>>{
 
-    PriorityQueue<T> priorityQueue;
-
-    public HeapSort(ArrayList<T> arrayList) {
-        priorityQueue = new PriorityQueue<>();
-        priorityQueue.addAll(arrayList);
+class HeapSort<T extends Comparable<T>>{
+    private PriorityQueue<T> pq = new PriorityQueue<>();
+    public HeapSort(ArrayList<T> array){
+        pq.addAll(array);
     }
 
-    public PriorityQueue<T> getPriorityQueue() {
-        return priorityQueue;
+    public PriorityQueue<T> getPq() {
+        return pq;
     }
 
-    public void heapSort(){
-
+    public ArrayList<T> getSortedArrayList(){
+        ArrayList<T> array=new ArrayList<>(pq.size());
+        int s=pq.size();
+        for (int i=0;i<s;i++)
+        {
+            array.add(i,pq.poll());
+        }
+        return array;
     }
+
+
 }
-
-
 
 public class SortDemo {
 
     public static void main(String args[]) {
-        //System.out.println("Generating Random Numbers");
-        //Integer[] testArr = new Integer[1000000];
         ArrayList<Integer> arrayList = new ArrayList<>();
-
-        //Random random = new Random();
-        for (int i = 0; i < arrayList.size(); i++) {
-            //testArr[i] = random.nextInt(9999);
+        for (int i = 0; i < 10; i++) {
             arrayList.add(-i);
         }
-        //System.out.println("Random Numbers Generated");
         System.out.println(arrayList);
 
-//        MergeSort<Integer> m1 = new MergeSort<>(testArr);
-//        //System.out.println("Unsorted Array: "+ Arrays.toString(m1.getArr()));
-//        Long starttime = System.currentTimeMillis();
-//        m1.mergeSort(0, testArr.length - 1);
-//        Long endtime = System.currentTimeMillis();
-//        System.out.println("Total Time Taken by Merge Sort: " + (endtime - starttime) + " ms");
-//        //System.out.println("Sorted Array: "+Arrays.toString(m1.getArr()));
+        HeapSort hs = new HeapSort(arrayList);
+        System.out.println(hs.getSortedArrayList());
 
-        HeapSort<Integer> heapSort = new HeapSort<>(arrayList);
-        System.out.println(heapSort.getPriorityQueue());
+ArrayList<String> str= new ArrayList<>();
+
 
     }
 }
