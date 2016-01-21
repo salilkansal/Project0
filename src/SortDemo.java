@@ -1,8 +1,6 @@
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.PriorityQueue;
+import java.util.*;
 
-
+//Only those objects can be passed which can be compared with themselves
 class MergeSort<T extends Comparable<? super T>> {
 
     private T array[];
@@ -15,31 +13,31 @@ class MergeSort<T extends Comparable<? super T>> {
         return array;
     }
 
-    //The mergeSort method. This method calls itself recursively for left half and right half of array
+
     public void mergeSort(int low, int high) {
-        if (low >= high) return; //if its only one element then simply return.
-        int mid = (low + high) / 2;
+        if (low >= high) return; //return without doing anything if only one element
+        int mid = (low + high) / 2; //split array into two halves
         mergeSort(low, mid);
         mergeSort(mid + 1, high);
-        merge(low, mid, high); //merge method to merge two sorted arrays into one sorted array.
+        merge(low, mid, high); //calling the merge method
 
     }
 
     private void merge(int low, int mid, int high) {
-        ArrayDeque<T> auxList = new ArrayDeque<>(); //using ArrayDeque to add elements at the end.
+        ArrayDeque<T> auxList = new ArrayDeque<>(); //using ArrayDeque as auxiliary storage of elements
         int arr1ptr, arr1end, arr2ptr, arr2end;
         arr1ptr = low;
         arr1end = mid;
         arr2ptr = mid + 1;
         arr2end = high;
         while ((arr1ptr <= arr1end) && (arr2ptr <= arr2end)) { //loop till anyone of the arrays become empty.
-            if (array[arr1ptr].compareTo(array[arr2ptr]) < 0) { //comparing the elements of two arrays and adding it to the aux list.
+            if (array[arr1ptr].compareTo(array[arr2ptr]) < 0) { //adding the smaller element to the temp list
                 auxList.add(array[arr1ptr++]);
             } else {
                 auxList.add(array[arr2ptr++]);
             }
         }
-        //adding rest of the elements left in the two arrays to the aux list.
+        //copying rest of the elements into temp list
         if (arr1ptr > arr1end) {
             for (int k = arr2ptr; k <= arr2end; k++) {
                 auxList.add(array[k]);
@@ -49,10 +47,14 @@ class MergeSort<T extends Comparable<? super T>> {
                 auxList.add(array[k]);
             }
         }
-        //copy aux list back to the main array.
+        //copy temp list back to main array
         for (int k = low; k <= high; k++) {
-            array[k] = auxList.removeFirst(); //using arrayList will be expensive here as while removing the first element, rest
-            //of the elements will have to be shifted together.
+            array[k] = auxList.removeFirst();
+
+            /** using arrayList will be expensive here as while
+             * removing the first element, rest of the elements
+             * will have to be shifted by one step.
+             */
         }
 
 
@@ -60,23 +62,21 @@ class MergeSort<T extends Comparable<? super T>> {
 
 }
 
+class HeapSort<T extends Comparable<? super T>> {
+    //using a priority queue to implement the Heapsort algorithms
+    private PriorityQueue<T> priorityQueue = new PriorityQueue<>();
 
-class HeapSort<T extends Comparable<T>>{
-    private PriorityQueue<T> pq = new PriorityQueue<>();
-    public HeapSort(ArrayList<T> array){
-        pq.addAll(array);
+    //inputs a collection and adds all the elements to a priority queue
+    public HeapSort(Collection<? extends T> collection) {
+        priorityQueue.addAll(collection);
     }
 
-    public PriorityQueue<T> getPq() {
-        return pq;
-    }
-
-    public ArrayList<T> getSortedArrayList(){
-        ArrayList<T> array=new ArrayList<>(pq.size());
-        int s=pq.size();
-        for (int i=0;i<s;i++)
-        {
-            array.add(i,pq.poll());
+    //removes the root of the heap and adds it to the arrayList
+    public ArrayList<T> getSortedList() {
+        ArrayList<T> array = new ArrayList<>(priorityQueue.size());
+        int s = priorityQueue.size();
+        for (int i = 0; i < s; i++) {
+            array.add(i, priorityQueue.poll());
         }
         return array;
     }
@@ -87,16 +87,56 @@ class HeapSort<T extends Comparable<T>>{
 public class SortDemo {
 
     public static void main(String args[]) {
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            arrayList.add(-i);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Program to compare Merge Sort and Heap Sort over >1 million numbers");
+        System.out.println("Which sorting algorithm you would like to test?");
+        System.out.println("1) Merge Sort");
+        System.out.println("2) Heap Sort");
+        int choice = scanner.nextInt();
+
+        switch (choice) {
+
+            case 1:
+                System.out.println("Merge Sort selected");
+                System.out.println("Generating array of 1 million numbers");
+                Integer[] array = new Integer[1000000];
+
+                for (int i = 0; i < array.length; i++) {
+                    array[i] = -i;
+                }
+
+                System.out.println("Array Generated");
+                System.out.println("Running Heap Sort");
+                MergeSort<Integer> m1 = new MergeSort<>(array);
+                Long start1 = System.currentTimeMillis();
+                m1.mergeSort(0, m1.getArr().length - 1);
+                Long end1 = System.currentTimeMillis();
+                System.out.println("Finished Successfully");
+                System.out.println("Took " + (end1 - start1) + " ms");
+                break;
+            case 2:
+                System.out.println("Heap Sort selected");
+                System.out.println("Generating array of 1 million numbers");
+                ArrayList<Integer> array1 = new ArrayList<>();
+
+                for (int i = 0; i < 1000000; i++) {
+                    array1.add(-i);
+                }
+
+                System.out.println("Array Generated");
+                System.out.println("Running Heap Sort");
+                HeapSort<Integer> heapSort = new HeapSort<>(array1);
+                Long start = System.currentTimeMillis();
+                heapSort.getSortedList();
+                Long end = System.currentTimeMillis();
+                System.out.println("Finished Successfully");
+                System.out.println("Took " + (end - start) + " ms");
+                break;
+            default:
+                break;
+
+
         }
-        System.out.println(arrayList);
-
-        HeapSort hs = new HeapSort(arrayList);
-        System.out.println(hs.getSortedArrayList());
-
-ArrayList<String> str= new ArrayList<>();
 
 
     }
