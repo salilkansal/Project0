@@ -102,7 +102,7 @@ public class SortDemo {
                 Integer[] array = new Integer[1000000];
 
                 for (int i = 0; i < array.length; i++) {
-                    array[i] = -i;
+                    array[i] = -2*i;
                 }
 
                 System.out.println("Array Generated");
